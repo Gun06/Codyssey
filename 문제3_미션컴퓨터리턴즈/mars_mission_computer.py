@@ -1,4 +1,5 @@
 import random
+import os
 from datetime import datetime
 
 class DummySensor:
@@ -11,6 +12,13 @@ class DummySensor:
             "mars_base_internal_co2": None,
             "mars_base_internal_oxygen": None
         }
+
+        # 로그 파일 저장 폴더 및 경로 설정
+        self.log_dir = "문제3_미션컴퓨터리턴즈"
+        self.log_file_path = os.path.join(self.log_dir, "mars_env_log.txt")
+
+        # 폴더가 없으면 생성
+        os.makedirs(self.log_dir, exist_ok=True)
 
     def set_env(self):
         self.env_values["mars_base_internal_temperature"] = round(random.uniform(18, 30), 2)
@@ -31,14 +39,13 @@ class DummySensor:
             f"외부 광량: {self.env_values['mars_base_external_illuminance']} W/m2",
             f"내부 CO2: {self.env_values['mars_base_internal_co2']}%",
             f"내부 산소: {self.env_values['mars_base_internal_oxygen']}%",
-            ""  # 한 줄 공백으로 로그 간 구분
+            ""  # 공백 줄로 구분
         ]
 
-        with open("mars_env_log.txt", "a", encoding="utf-8") as log_file:
+        with open(self.log_file_path, "a", encoding="utf-8") as log_file:
             log_file.write("\n".join(log_lines))
 
         return self.env_values
-
 
 
 # 인스턴스 생성 및 사용
@@ -46,8 +53,8 @@ if __name__ == "__main__":
     ds = DummySensor()
     ds.set_env()
     env_data = ds.get_env()
-    
-    # 출력 확인
+
+    # 콘솔 출력
     print("🌌 화성 기지 환경 센서 데이터:")
     for key, value in env_data.items():
         print(f"{key}: {value}")
