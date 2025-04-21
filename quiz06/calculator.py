@@ -1,7 +1,11 @@
 import sys
 import subprocess
 import platform
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QLineEdit
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 
+# PyQt5 설치 확인 및 설치 함수
 def check_and_install_pyqt():
     try:
         # PyQt5가 설치되어 있는지 확인
@@ -26,4 +30,57 @@ def check_and_install_pyqt():
 # 호출하여 PyQt5 설치 여부 확인 및 설치
 check_and_install_pyqt()
 
-# 이후 PyQt5 사용 예제 코드 추가 가능
+class Calculator(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # UI 초기화
+        self.initUI()
+
+    def initUI(self):
+        # 출력 디스플레이
+        self.display = QLineEdit(self)
+        self.display.setAlignment(Qt.AlignRight)
+        
+        # 명시적으로 QFont 객체를 생성하여 폰트를 설정
+        font = QFont("Arial", 24)
+        self.display.setFont(font)
+        
+        self.display.setReadOnly(True)
+        self.display.setText("0")
+
+        # 레이아웃 설정
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(self.display)
+
+        gridLayout = QGridLayout()
+        buttons = [
+            ('AC', None), ('+/-', None), ('%', None), ('÷', None),
+            ('7', None), ('8', None), ('9', None), ('×', None),
+            ('4', None), ('5', None), ('6', None), ('-', None),
+            ('1', None), ('2', None), ('3', None), ('+', None),
+            ('0', None), ('.', None), ('=', None)
+        ]
+
+        # 버튼 생성
+        row, col = 1, 0
+        for button_text, _ in buttons:
+            button = QPushButton(button_text, self)
+            gridLayout.addWidget(button, row, col, 1, 1)
+            col += 1
+            if col > 3:
+                col = 0
+                row += 1
+
+        mainLayout.addLayout(gridLayout)
+        self.setLayout(mainLayout)
+
+        # 윈도우 설정
+        self.setWindowTitle('Calculator')
+        self.setGeometry(300, 300, 350, 400)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    calc = Calculator()
+    calc.show()
+    sys.exit(app.exec_())
