@@ -56,16 +56,18 @@ class Calculator(QWidget):
         gridLayout = QGridLayout()
         buttons = [
             ('AC', None), ('+/-', None), ('%', None), ('÷', None),
-            ('7', None), ('8', None), ('9', None), ('×', None),
-            ('4', None), ('5', None), ('6', None), ('-', None),
-            ('1', None), ('2', None), ('3', None), ('+', None),
-            ('0', None), ('.', None), ('=', None)
+            ('7', self.append_digit), ('8', self.append_digit), ('9', self.append_digit), ('×', None),
+            ('4', self.append_digit), ('5', self.append_digit), ('6', self.append_digit), ('-', None),
+            ('1', self.append_digit), ('2', self.append_digit), ('3', self.append_digit), ('+', None),
+            ('0', self.append_digit), ('.', self.append_digit), ('=', None)
         ]
 
         # 버튼 생성
         row, col = 1, 0
-        for button_text, _ in buttons:
+        for button_text, handler in buttons:
             button = QPushButton(button_text, self)
+            if handler:  # 숫자 버튼에만 이벤트 처리
+                button.clicked.connect(lambda _, text=button_text, handler=handler: handler(text))
             gridLayout.addWidget(button, row, col, 1, 1)
             col += 1
             if col > 3:
@@ -78,6 +80,14 @@ class Calculator(QWidget):
         # 윈도우 설정
         self.setWindowTitle('Calculator')
         self.setGeometry(300, 300, 350, 400)
+
+    # 숫자 버튼 클릭 시 처리
+    def append_digit(self, digit):
+        current_text = self.display.text()
+        if current_text == "0":
+            self.display.setText(digit)
+        else:
+            self.display.setText(current_text + digit)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
