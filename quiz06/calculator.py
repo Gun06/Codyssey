@@ -55,19 +55,18 @@ class Calculator(QWidget):
 
         gridLayout = QGridLayout()
         buttons = [
-            ('AC', None), ('+/-', None), ('%', None), ('÷', None),
-            ('7', self.append_digit), ('8', self.append_digit), ('9', self.append_digit), ('×', None),
-            ('4', self.append_digit), ('5', self.append_digit), ('6', self.append_digit), ('-', None),
-            ('1', self.append_digit), ('2', self.append_digit), ('3', self.append_digit), ('+', None),
-            ('0', self.append_digit), ('.', self.append_digit), ('=', None)
+            ('AC', self.clear), ('+/-', self.toggle_sign), ('%', self.percent), ('÷', self.set_operator),
+            ('7', self.append_digit), ('8', self.append_digit), ('9', self.append_digit), ('×', self.set_operator),
+            ('4', self.append_digit), ('5', self.append_digit), ('6', self.append_digit), ('-', self.set_operator),
+            ('1', self.append_digit), ('2', self.append_digit), ('3', self.append_digit), ('+', self.set_operator),
+            ('0', self.append_digit), ('.', self.append_digit), ('=', self.calculate)
         ]
 
         # 버튼 생성
         row, col = 1, 0
         for button_text, handler in buttons:
             button = QPushButton(button_text, self)
-            if handler:  # 숫자 버튼에만 이벤트 처리
-                button.clicked.connect(lambda _, text=button_text, handler=handler: handler(text))
+            button.clicked.connect(lambda _, text=button_text, handler=handler: handler(text))
             gridLayout.addWidget(button, row, col, 1, 1)
             col += 1
             if col > 3:
@@ -81,6 +80,9 @@ class Calculator(QWidget):
         self.setWindowTitle('Calculator')
         self.setGeometry(300, 300, 350, 400)
 
+        self.operator = None
+        self.first_operand = None
+
     # 숫자 버튼 클릭 시 처리
     def append_digit(self, digit):
         current_text = self.display.text()
@@ -88,6 +90,57 @@ class Calculator(QWidget):
             self.display.setText(digit)
         else:
             self.display.setText(current_text + digit)
+
+    # 연산자 버튼 클릭 시 처리
+    def set_operator(self, operator):
+        if self.operator is None:
+            self.first_operand = float(self.display.text())
+            self.operator = operator
+            self.display.setText("0")
+        else:
+            self.calculate()
+            self.operator = operator
+            self.first_operand = float(self.display.text())
+            self.display.setText("0")
+
+    # 계산 버튼 처리
+    def calculate(self, _=None):
+        second_operand = float(self.display.text())
+        
+        if self.operator == "+":
+            result = self.first_operand + second_operand
+        elif self.operator == "-":
+            result = self.first_operand - second_operand
+        elif self.operator == "×":
+            result = self.first_operand * second_operand
+        elif self.operator == "÷":
+            if second_operand == 0:
+                result = "Error"
+            else:
+                result = self.first_operand / second_operand
+
+        self.display.setText(str(result))
+        self.operator = None
+        self.first_operand = None
+
+    # AC 버튼 클릭 시 처리
+    def clear(self, _=None):
+        self.display.setText("0")
+        self.operator = None
+        self.first_operand = None
+
+    # +/- 버튼 클릭 시 처리
+    def toggle_sign(self, _=None):
+        current_text = self.display.text()
+        if current_text.startswith('-'):
+            self.display.setText(current_text[1:])
+        else:
+            self.display.setText('-' + current_text)
+
+    # % 버튼 클릭 시 처리
+    def percent(self, _=None):
+        current_text = self.display.text()
+        self.display.setText(str(float(current_text) / 100))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
