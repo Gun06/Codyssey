@@ -171,17 +171,11 @@ class Calculator(QMainWindow):
         ### 만약 -이면 부호를 뺀 나머지를 출력하고
         #### 그게 아니라면 -를 붙여서 출력
         elif key == '+/-':
-            if self.current_value.startswith('-'):
-                self.current_value = self.current_value[1:]
-            else:
-                self.current_value = '-' + self.current_value
-            self.display.setText(self.current_value)
+            self.negative_positive()
         
         # '%' 버튼을 누른 경우 퍼센트 계산
         elif key == '%':
-            val = float(self.current_value) / 100.0
-            self.current_value = str(val)
-            self.display.setText(self.current_value)
+            self.percent()
         
     
     # 계산 로직
@@ -210,6 +204,27 @@ class Calculator(QMainWindow):
         if right == 0:
             return "Error"
         return left / right
+
+    # reset 메소드
+    def reset(self):
+        self.current_value = '0'
+        self.operator = None
+        self.last_value = None
+        self.display.setText(self.current_value)
+
+    # 음수/양수 변환
+    def negative_positive(self):
+        if self.current_value.startswith('-'):
+            self.current_value = self.current_value[1:]
+        else:
+            self.current_value = '-' + self.current_value
+        self.display.setText(self.current_value)
+
+    # 퍼센트 계산
+    def percent(self):
+        value = float(self.current_value) / 100.0
+        self.current_value = str(value)
+        self.display.setText(self.current_value)
 
     # 버튼 스타일 함수 정의
     def create_button(self, label, role='number'):
