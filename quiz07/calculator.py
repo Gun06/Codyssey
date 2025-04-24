@@ -187,16 +187,29 @@ class Calculator(QMainWindow):
     # 계산 로직
     def calculate(self, left, right, op):
         if op =='+':
-            return left + right
+            return self.add(left, right)
         elif op == '-':
-            return left - right
+            return self.subtract(left, right)
         elif op == '*':
-            return left * right
+            return self.multiply(left, right)
         elif op == '/':
-            if right == 0:
-                return 'Error'
-            return left / right
+            return self.divide(left, right)
         return 0
+
+    # 사칙연산 메소드 추가
+    def add(self, left, right):
+        return left + right
+
+    def subtract(self, left, right):
+        return left - right
+
+    def multiply(self, left, right):
+        return left * right
+
+    def divide(self, left, right):
+        if right == 0:
+            return "Error"
+        return left / right
 
     # 버튼 스타일 함수 정의
     def create_button(self, label, role='number'):
