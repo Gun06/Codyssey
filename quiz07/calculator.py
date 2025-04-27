@@ -143,24 +143,7 @@ class Calculator(QMainWindow):
         
         # '=' 버튼을 누른 경우
         elif key == '=':
-            if self.operator and self.last_value is not None:
-                result = self.calculate(
-                    float(self.last_value),
-                    float(self.current_value),
-                    self.operator
-                )
-
-                # 쉼표 추가한 문자열로 포맷
-                if result == int(result):
-                    formatted = f"{int(result):,}"
-                else:
-                    formatted = f"{result:,.10f}".rstrip('0').rstrip('.')
-
-                self.current_value = str(result)
-                self.display.setText(formatted)
-
-                # 연속 계산 편의상 last_value에 결과값 저장
-                self.last_value = self.current_value
+            self.equal()
         
         # 'AC' 버튼을 누른 경우 == 초기화
         elif key == 'AC':
@@ -225,6 +208,27 @@ class Calculator(QMainWindow):
         value = float(self.current_value) / 100.0
         self.current_value = str(value)
         self.display.setText(self.current_value)
+
+    # 결과 출력 메소드 추가
+    def equal(self):
+        if self.operator and self.last_value is not None:
+            result = self.calculate(
+                float(self.last_value),
+                float(self.current_value),
+                self.operator
+            )
+
+            # 쉼표 추가한 문자열로 포맷
+            if result == int(result):
+                formatted = f"{int(result):,}"
+            else:
+                formatted = f"{result:,.10f}".rstrip('0').rstrip('.')
+
+            self.current_value = str(result)
+            self.display.setText(formatted)
+
+            # 연속 계산 편의상 last_value에 결과값 저장
+            self.last_value = self.current_value
 
     # 버튼 스타일 함수 정의
     def create_button(self, label, role='number'):
