@@ -176,11 +176,14 @@ class Calculator(QMainWindow):
                 self.operator
             )
 
+            # 소수점 6자리 이하 반올림 후 출력
+            result = round(result, 6)
+
             # 쉼표 추가한 문자열로 포맷
             if result == int(result):
                 formatted = f"{int(result):,}"
             else:
-                formatted = f"{result:,.10f}".rstrip('0').rstrip('.')
+                formatted = f"{result:,.6f}".rstrip('0').rstrip('.')
 
             self.current_value = str(result)
             self.display.setText(formatted)
