@@ -8,13 +8,11 @@ from PyQt5.QtGui import QFont
 # PyQt5 설치 확인 및 설치 함수
 def check_and_install_pyqt():
     try:
-        # PyQt5가 설치되어 있는지 확인
         import PyQt5
         print("PyQt5 is already installed.")
     except ImportError:
         print("PyQt5 is not installed. Installing now...")
 
-        # 운영 체제에 맞는 명령어로 PyQt5 설치
         if platform.system() == "Windows":
             subprocess.check_call([sys.executable, "-m", "pip", "install", "pyqt5"])
         elif platform.system() == "Linux":
@@ -38,13 +36,13 @@ class Calculator(QMainWindow):
 
     # 계산기 초기화
     def reset_all(self):
-        self.current_value = '0'  # 계산기 디스플레이에 0을 초기값으로 설정
-        self.operator = None  # 연산자 초기화
-        self.last_value = None  # 마지막 계산값 초기화
-        self.display.setText('0')  # 디스플레이에 0을 표시
+        self.current_value = '0'
+        self.operator = None
+        self.last_value = None
+        self.display.setText('0')
 
     def initUI(self):
-        self.setWindowTitle('Calculator')  # 윈도우 타이틀 설정
+        self.setWindowTitle('Calculator')
         self.btn_font = QFont('Arial', 20)
         
         center_widget = QWidget()
@@ -190,6 +188,8 @@ class Calculator(QMainWindow):
             # 연속 계산 편의상 last_value에 결과값 저장
             self.last_value = self.current_value
 
+        self.update_font_size()
+
     # 음수/양수 변환
     def negative_positive(self):
         if self.current_value == '0':
@@ -206,11 +206,46 @@ class Calculator(QMainWindow):
         self.current_value = str(value)
         self.display.setText(self.current_value)
 
+    # 폰트 크기 조정 함수
+    def update_font_size(self):
+        # 결과 값의 길이에 따라서 폰트 크기 조정
+        result_length = len(self.current_value)
+        if result_length <= 6:
+            self.display.setStyleSheet("""
+                QLineEdit {
+                    background-color: black;
+                    color: white;
+                    border: none;
+                    font-size: 52px;
+                    padding: 0px;
+                }
+            """)
+        elif result_length <= 10:
+            self.display.setStyleSheet("""
+                QLineEdit {
+                    background-color: black;
+                    color: white;
+                    border: none;
+                    font-size: 30px;
+                    padding: 10px;
+                }
+            """)
+        else:
+            self.display.setStyleSheet("""
+                QLineEdit {
+                    background-color: black;
+                    color: white;
+                    border: none;
+                    font-size: 24px;
+                    padding: 10px;
+                }
+            """)
+
     # 버튼 스타일 함수 정의
     def create_button(self, label, role='number'):
         btn = QPushButton(label)
         if label == '0' and role == 'number':
-            btn.setFixedSize(170, 80)  # 가로 2칸 정도로
+            btn.setFixedSize(170, 80)
             btn.setStyleSheet("""
                 QPushButton {
                     background-color: #333333;
