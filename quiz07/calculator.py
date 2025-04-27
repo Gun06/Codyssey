@@ -38,24 +38,20 @@ class Calculator(QMainWindow):
 
     # 계산기 초기화
     def reset_all(self):
-        # 계산을 위한 변수 초기화
-        self.current_value = '0'
-        self.operator = None
-        self.last_value = None
-        self.display.setText('0')
+        self.current_value = '0'  # 계산기 디스플레이에 0을 초기값으로 설정
+        self.operator = None  # 연산자 초기화
+        self.last_value = None  # 마지막 계산값 초기화
+        self.display.setText('0')  # 디스플레이에 0을 표시
 
     def initUI(self):
-        # 여기서 UI 컴포넌트(버튼, 라벨 등)를 생성하고 배치 설정
-        self.setWindowTitle('Calculator')
+        self.setWindowTitle('Calculator')  # 윈도우 타이틀 설정
         self.btn_font = QFont('Arial', 20)
         
-        # 메인 중앙 위젯
-        center_witget = QWidget()
-        self.setCentralWidget(center_witget)
-        center_witget.setStyleSheet("background-color: black;")
+        center_widget = QWidget()
+        self.setCentralWidget(center_widget)
+        center_widget.setStyleSheet("background-color: black;")
 
-        # 전체 레이아웃 (상단 + 버튼 그리드)
-        vbox = QVBoxLayout(center_witget)
+        vbox = QVBoxLayout(center_widget)
 
         # 디스플레이 부분 정의(QLineEdit)
         self.display = QLineEdit()
@@ -64,7 +60,6 @@ class Calculator(QMainWindow):
         self.display.setAlignment(Qt.AlignRight)
         self.display.setText('0')
 
-        # 디스플레이 스타일 적용
         self.display.setStyleSheet("""
             QLineEdit {
                 background-color: black;
@@ -75,16 +70,11 @@ class Calculator(QMainWindow):
             }
         """)
         
-        # 디스플레이 적용
         vbox.addWidget(self.display)
 
-        # 버튼 그리드 설정
         grid = QGridLayout()
-
-        # 버튼 그리드 적용
         vbox.addLayout(grid)
 
-        # 버튼 정의
         buttons = [
             [('AC', 'function'), ('+/-', 'function'), ('%', 'function'), ('/', 'operator')],
             [('7', 'number'), ('8', 'number'), ('9', 'number'), ('*', 'operator')],
@@ -93,7 +83,7 @@ class Calculator(QMainWindow):
             [('0', 'number'), ('.', 'number'), ('=', 'operator')]
         ]
 
-        # 버튼 배치 코드
+        # 버튼 배치
         for row_idx, row_values in enumerate(buttons):
             col_idx = 0
             for val, role in row_values:
@@ -102,8 +92,6 @@ class Calculator(QMainWindow):
                     continue
                 btn = self.create_button(val, role)
                 btn.clicked.connect(self.onButtonClicked)
-
-                # '0' 버튼은 가로 2칸
                 if val == '0':
                     grid.addWidget(btn, row_idx, col_idx, 1, 2)
                     col_idx += 2
@@ -113,11 +101,8 @@ class Calculator(QMainWindow):
         
         self.resize(300, 600)
 
-    # 버튼 로직 생성
     def onButtonClicked(self):
-        # 클린된 버튼의 객체를 가져오는 메소드 sender()
         btn = self.sender()
-        # 버튼에 표시된 텍스트를 얻는 함수
         key = btn.text()
 
         # 숫자일 경우
@@ -134,36 +119,32 @@ class Calculator(QMainWindow):
                 self.current_value += '.'
                 self.display.setText(self.current_value)
         
-        # 연산자를 누른경우
+        # 연산자를 눌렀을 경우
         elif key in ['+','-','*','/']:
             self.operator = key
             self.last_value = self.current_value
             self.current_value = '0'
             self.display.setText(self.current_value)
         
-        # '=' 버튼을 누른 경우
+        # '=' 버튼을 눌렀을 경우
         elif key == '=':
             self.equal()
         
-        # 'AC' 버튼을 누른 경우 == 초기화
+        # 'AC' 버튼을 눌렀을 경우 == 초기화
         elif key == 'AC':
             self.reset_all()
         
-        # '+/-' 버튼을 누른 경우 == 부호 변경
-        ## startswith 는 문자열 맨 앞이 뭐로 시작하는지 확인 후 boolean 값으로 반환해주는 메소드
-        ### 만약 -이면 부호를 뺀 나머지를 출력하고
-        #### 그게 아니라면 -를 붙여서 출력
+        # '+/-' 버튼을 눌렀을 경우 == 부호 변경
         elif key == '+/-':
             self.negative_positive()
         
-        # '%' 버튼을 누른 경우 퍼센트 계산
+        # '%' 버튼을 눌렀을 경우 퍼센트 계산
         elif key == '%':
             self.percent()
-        
-    
+
     # 계산 로직
     def calculate(self, left, right, op):
-        if op =='+':
+        if op == '+':
             return self.add(left, right)
         elif op == '-':
             return self.subtract(left, right)
@@ -185,29 +166,8 @@ class Calculator(QMainWindow):
 
     def divide(self, left, right):
         if right == 0:
-            return "Error"
+            return "Error"  # 나누기 0 오류 처리
         return left / right
-
-    # reset 메소드
-    def reset(self):
-        self.current_value = '0'
-        self.operator = None
-        self.last_value = None
-        self.display.setText(self.current_value)
-
-    # 음수/양수 변환
-    def negative_positive(self):
-        if self.current_value.startswith('-'):
-            self.current_value = self.current_value[1:]
-        else:
-            self.current_value = '-' + self.current_value
-        self.display.setText(self.current_value)
-
-    # 퍼센트 계산
-    def percent(self):
-        value = float(self.current_value) / 100.0
-        self.current_value = str(value)
-        self.display.setText(self.current_value)
 
     # 결과 출력 메소드 추가
     def equal(self):
@@ -230,10 +190,25 @@ class Calculator(QMainWindow):
             # 연속 계산 편의상 last_value에 결과값 저장
             self.last_value = self.current_value
 
+    # 음수/양수 변환
+    def negative_positive(self):
+        if self.current_value == '0':
+            return  # 0일 때는 부호 변경을 하지 않음
+        if self.current_value.startswith('-'):
+            self.current_value = self.current_value[1:]
+        else:
+            self.current_value = '-' + self.current_value
+        self.display.setText(self.current_value)
+
+    # 퍼센트 계산
+    def percent(self):
+        value = float(self.current_value) / 100.0
+        self.current_value = str(value)
+        self.display.setText(self.current_value)
+
     # 버튼 스타일 함수 정의
     def create_button(self, label, role='number'):
         btn = QPushButton(label)
-
         if label == '0' and role == 'number':
             btn.setFixedSize(170, 80)  # 가로 2칸 정도로
             btn.setStyleSheet("""
@@ -252,7 +227,6 @@ class Calculator(QMainWindow):
             """)
         else:
             btn.setFixedSize(80, 80)
-
             if role == 'number':
                 btn.setStyleSheet("""
                     QPushButton {
