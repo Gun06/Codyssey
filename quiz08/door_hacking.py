@@ -83,9 +83,9 @@ def unlock_zip():
     last_try = checkpoint.get('last_try')
     last_status = checkpoint.get('status')
 
-    # 1. Wordlist 시도
+    # 1. Wordlist
     if last_mode is None or last_mode == 'wordlist':
-        print("📚 Wordlist로 시도 중...")
+        print("📚 Wordlist 시도 중...")
         start_idx = 0
         if last_mode == 'wordlist' and last_try in common_passwords:
             start_idx = common_passwords.index(last_try) + 1
@@ -103,7 +103,7 @@ def unlock_zip():
         last_mode = 'smart'
         last_try = None
 
-    # 2. Smart Brute Force 시도
+    # 2. Smart Brute Force
     if last_mode == 'smart':
         print("🎯 Smart Brute Force(문자3+숫자3) 진행 중...")
         all_passwords = list(smart_brute_force())
@@ -119,17 +119,15 @@ def unlock_zip():
         pool = multiprocessing.Pool(processes=cpu_count)
         chunk_size = 100000
 
-        for idx, password_attempt in enumerate(all_passwords):
-            result = pool.apply_async(try_password, (password_attempt,))
-            found = result.get()
-            if found:
+        for idx, password_attempt in enumerate(pool.imap_unordered(try_password, all_passwords, chunksize=chunk_size)):
+            if password_attempt:
                 pool.terminate()
-                found_password(found, 'smart')
+                found_password(password_attempt, 'smart')
                 return
 
             if idx % 100000 == 0:
-                save_checkpoint('smart', password_attempt)
-                print(f"💾 Smart 체크포인트 저장: {password_attempt} (시도 {idx}개)")
+                save_checkpoint('smart', all_passwords[idx])
+                print(f"💾 Smart 체크포인트 저장: {all_passwords[idx]} (시도 {idx}개)")
 
         pool.close()
         pool.join()
@@ -138,7 +136,7 @@ def unlock_zip():
         last_mode = 'full'
         last_try = None
 
-    # 3. Full Brute Force 시도
+    # 3. Full Brute Force
     if last_mode == 'full':
         print("🌎 전체 6자리 조합(Full Brute Force) 진행 중...")
         all_passwords = list(full_brute_force())
@@ -154,17 +152,15 @@ def unlock_zip():
         pool = multiprocessing.Pool(processes=cpu_count)
         chunk_size = 100000
 
-        for idx, password_attempt in enumerate(all_passwords):
-            result = pool.apply_async(try_password, (password_attempt,))
-            found = result.get()
-            if found:
+        for idx, password_attempt in enumerate(pool.imap_unordered(try_password, all_passwords, chunksize=chunk_size)):
+            if password_attempt:
                 pool.terminate()
-                found_password(found, 'full')
+                found_password(password_attempt, 'full')
                 return
 
             if idx % 100000 == 0:
-                save_checkpoint('full', password_attempt)
-                print(f"💾 Full 체크포인트 저장: {password_attempt} (시도 {idx}개)")
+                save_checkpoint('full', all_passwords[idx])
+                print(f"💾 Full 체크포인트 저장: {all_passwords[idx]} (시도 {idx}개)")
 
         pool.close()
         pool.join()
