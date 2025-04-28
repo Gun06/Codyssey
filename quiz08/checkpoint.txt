@@ -1,1 +1,3 @@
-loa001
+mode:smart
+last_try:zwf003
+status:trying
