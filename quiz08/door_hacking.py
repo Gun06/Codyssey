@@ -6,7 +6,7 @@ import multiprocessing
 from datetime import datetime
 
 # 경로 설정
-folder_path = '/Users/kogun/Desktop/Codyssey_dev/quiz08'
+folder_path = '/Users/kogun/Desktop/Codyssey/quiz08'
 zip_filename = 'Emergency Storage Key.zip'
 zip_path = os.path.join(folder_path, zip_filename)
 password_file_path = os.path.join(folder_path, 'password.txt')
