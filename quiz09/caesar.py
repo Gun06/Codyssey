@@ -1,72 +1,88 @@
-# Caesar.py
-
-def read_password_file(filepath='password.txt') -> str:
+def read_file(filename):
     """
-    password.txt 파일에서 암호화된 문자열을 읽어옵니다.
+    주어진 텍스트 파일을 읽어서 문자열로 반환합니다.
+    예외 발생 시 에러 메시지를 출력하고 빈 문자열을 반환합니다.
     """
     try:
-        with open(filepath, 'r') as f:
-            password = f.read().strip()
-        print(f"[INFO] password.txt에서 읽은 문자열: {password}")
-        return password
+        with open(filename, 'r', encoding='utf-8') as f:
+            return f.read().strip()
     except FileNotFoundError:
-        print(f"[ERROR] 파일을 찾을 수 없습니다: {filepath}")
-        return ""
+        print(f"[에러] 파일을 찾을 수 없습니다: {filename}")
+        return ''
+    except Exception as e:
+        print(f"[에러] {filename} 파일을 읽는 중 문제가 발생했습니다: {e}")
+        return ''
 
 
-def get_all_caesar_shifts(target_text: str) -> list:
+def write_file(filename, content):
     """
-    Caesar Cipher로 0~25 shift에 대해 복호화한 결과를 리스트로 반환합니다.
+    주어진 내용을 텍스트 파일로 저장합니다.
+    예외 발생 시 에러 메시지를 출력합니다.
+    """
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"[성공] 결과가 {filename}에 저장되었습니다.")
+    except Exception as e:
+        print(f"[에러] 결과 파일을 저장하는 중 문제가 발생했습니다: {e}")
+
+
+def get_all_caesar_shifts(text):
+    """
+    Caesar Cipher로 0~25 시프트에 대해 복호화된 문자열 리스트를 반환합니다.
     """
     decoded_list = []
     for shift in range(26):
-        decoded = ""
-        for char in target_text:
+        result = ''
+        for char in text:
             if char.isalpha():
                 base = ord('A') if char.isupper() else ord('a')
-                decoded += chr((ord(char) - base - shift) % 26 + base)
+                result += chr((ord(char) - base - shift) % 26 + base)
             else:
-                decoded += char
-        decoded_list.append(decoded)
+                result += char
+        decoded_list.append(result)
     return decoded_list
 
 
-def show_all_decoded_results(decoded_list: list) -> None:
+def caesar_cipher_decode_with_dictionary(target_text):
     """
-    모든 시프트 값(0~25)에 대해 복호화된 문자열을 출력합니다.
+    dictionary.txt에 존재하는 단어가 복호화된 문자열에 포함되면 자동 종료하고,
+    포함되지 않을 경우 수동 입력을 받아 복호화 결과를 저장합니다.
     """
-    print("\n📜 Caesar Cipher 복호화 결과\n" + "=" * 50)
+    dict_words = set()
+    dictionary_text = read_file('dictionary.txt')
+    if dictionary_text:
+        for word in dictionary_text.splitlines():
+            dict_words.add(word.strip().lower())
+
+    decoded_list = get_all_caesar_shifts(target_text)
+
+    print("\n[정보] Caesar Cipher 복호화 결과 (shift 0~25):\n" + "=" * 50)
     for idx, decoded in enumerate(decoded_list):
-        print(f"[SHIFT {idx:02d}] {decoded}")
+        print(f"[{idx:02d}] {decoded}")
+
+        # 단어 단위로 나눈 후 사전과 일치 여부 확인
+        words = decoded.lower().split()
+        if any(word in dict_words for word in words):
+            print(f"\n[자동 감지] 사전 단어가 포함된 결과 발견 (shift={idx})")
+            write_file('result.txt', decoded)
+            return
     print("=" * 50)
 
-
-def save_result_to_file(text: str, filepath='result.txt') -> None:
-    """
-    최종 선택된 복호 문자열을 result.txt에 저장합니다.
-    예외 발생 시 경고 메시지를 출력합니다.
-    """
+    # 수동 입력 fallback
     try:
-        with open(filepath, 'w') as f:
-            f.write(text)
-        print(f"[INFO] 복호 결과가 {filepath}에 저장되었습니다.")
+        key = int(input("\n해독된 것으로 보이는 shift 값을 입력하세요 (0~25): "))
+        if 0 <= key < 26:
+            write_file('result.txt', decoded_list[key])
+        else:
+            print("[오류] 0부터 25 사이의 숫자를 입력해야 합니다.")
+    except ValueError:
+        print("[오류] 숫자를 입력해야 합니다.")
     except Exception as e:
-        print(f"[ERROR] 파일 저장 중 문제가 발생했습니다: {e}")
+        print(f"[오류] 입력 처리 중 예외 발생: {e}")
 
 
 if __name__ == '__main__':
-    encrypted_text = read_password_file()
-
-    if encrypted_text:
-        decoded_list = get_all_caesar_shifts(encrypted_text)
-        show_all_decoded_results(decoded_list)
-
-        try:
-            shift_input = int(input("\n👀 읽기 쉬운 복호 결과의 시프트 번호를 입력하세요 (0~25): "))
-            if 0 <= shift_input < 26:
-                selected_result = decoded_list[shift_input]
-                save_result_to_file(selected_result)
-            else:
-                print("[ERROR] 유효하지 않은 시프트 번호입니다. 0~25 사이로 입력해주세요.")
-        except ValueError:
-            print("[ERROR] 숫자를 입력해야 합니다.")
+    cipher_text = read_file('password.txt')
+    if cipher_text:
+        caesar_cipher_decode_with_dictionary(cipher_text)
