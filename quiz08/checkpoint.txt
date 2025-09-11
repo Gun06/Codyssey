@@ -1,3 +1,0 @@
-mode:smart
-last_try:zwf003
-status:trying
