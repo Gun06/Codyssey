@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우주 해적단 - 스페이스 파이레츠</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e, #16213e);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #4ecdc4;
+            margin-top: 10px;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .section h2 {
+            color: #4ecdc4;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .pirate-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .pirate-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .pirate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.2);
+        }
+        .pirate-name {
+            color: #ff6b6b;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .pirate-title {
+            color: #4ecdc4;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .pirate-description {
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        .quote {
+            font-style: italic;
+            color: #4ecdc4;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #888;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(78, 205, 196, 0.5); }
+            to { text-shadow: 0 0 30px rgba(78, 205, 196, 0.8); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="glow">🏴‍☠️ 우주 해적단 🏴‍☠️</h1>
+            <p class="subtitle">SPACE PIRATES - 무한한 우주를 누비는 자유로운 영혼들</p>
+        </div>
+
+        <div class="section">
+            <h2>🌟 우리의 이야기</h2>
+            <p>우주 해적단은 2157년에 설립된 전설적인 우주 해적 집단입니다. 우리는 자유와 모험을 추구하며, 우주의 어둠 속에서도 빛나는 별처럼 살아갑니다. 정부의 억압과 기업의 탐욕에 맞서, 진정한 자유를 위해 싸우는 우리는 우주에서 가장 두려워받는 존재입니다.</p>
+        </div>
+
+        <div class="section">
+            <h2>👥 주요 인물들</h2>
+            <div class="pirate-list">
+                <div class="pirate-card">
+                    <div class="pirate-name">캡틴 제로</div>
+                    <div class="pirate-title">우주 해적단 총선장</div>
+                    <div class="pirate-description">전설적인 파일럿이자 전략가. 20년간 우주를 누비며 수많은 전투에서 승리를 거두었습니다. 그의 지휘 아래 우리는 절대 패배하지 않습니다.</div>
+                </div>
+                
+                <div class="pirate-card">
+                    <div class="pirate-name">스카이 호크</div>
+                    <div class="pirate-title">부선장 겸 정찰대장</div>
+                    <div class="pirate-description">우주에서 가장 빠른 전투기 조종사. 그의 눈은 1000광년 떨어진 적의 움직임도 놓치지 않습니다. 정찰 임무의 신.</div>
+                </div>
+                
+                <div class="pirate-card">
+                    <div class="pirate-name">네비게이터 스타</div>
+                    <div class="pirate-title">항해사</div>
+                    <div class="pirate-description">우주의 모든 항로를 꿰뚫고 있는 천재 항해사. 그녀 없이는 우리는 우주에서 길을 잃을 것입니다.</div>
+                </div>
+                
+                <div class="pirate-card">
+                    <div class="pirate-name">엔지니어 볼트</div>
+                    <div class="pirate-title">기술 총책임자</div>
+                    <div class="pirate-description">우주선의 모든 시스템을 완벽하게 관리하는 기술자. 그의 손길이 닿으면 고장난 우주선도 새것처럼 돌아갑니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 우리의 우주선</h2>
+            <p><strong>스타더스트 호 (Stardust)</strong> - 우리의 모선이자 집입니다. 500명의 승무원을 수용할 수 있는 거대한 우주선으로, 최신 기술이 집약되어 있습니다. 방어막, 양자 엔진, 그리고 무수한 무기들이 장착되어 있어 어떤 적도 두려워하지 않습니다.</p>
+        </div>
+
+        <div class="section">
+            <h2>⚔️ 우리의 원칙</h2>
+            <ul>
+                <li><strong>자유</strong> - 모든 생명체는 자유롭게 살 권리가 있습니다.</li>
+                <li><strong>정의</strong> - 약자를 보호하고 강자의 횡포를 막습니다.</li>
+                <li><strong>우정</strong> - 동료를 소중히 여기고 서로를 믿습니다.</li>
+                <li><strong>모험</strong> - 새로운 세계를 탐험하고 미지의 영역을 개척합니다.</li>
+                <li><strong>보물</strong> - 진정한 보물은 돈이 아닌 자유와 우정입니다.</li>
+            </ul>
+        </div>
+
+        <div class="quote">
+            "우주는 무한하고, 우리의 꿈도 무한하다. 
+            <br>별들 사이를 누비며 자유를 찾아 떠도는 것이야말로 진정한 해적의 삶이다!"
+            <br><strong>- 캡틴 제로</strong>
+        </div>
+
+        <div class="section">
+            <h2>🌌 활동 지역</h2>
+            <p>우리는 알파 센타우리, 베가, 시리우스 등 수많은 별계를 누비며 활동합니다. 각 행성마다 우리의 전설이 전해지고 있으며, 정부군과 기업 경비대들은 우리의 이름만 들어도 공포에 떱니다.</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2157 우주 해적단. 모든 권리 보유. (하지만 우리는 권리를 믿지 않습니다!)</p>
+            <p>🚀 <em>우주에서 만나요, 친구여!</em> 🚀</p>
+        </div>
+    </div>
+</body>
+</html>
