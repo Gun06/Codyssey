@@ -20,3 +20,4 @@ def question_list(db: Session = Depends(get_db)) -> List[QuestionResponse]:
     questions = db.query(Question).order_by(Question.id.desc()).all()
     return questions
 
+

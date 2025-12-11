@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-SQLALCHEMY_DATABASE_URL = 'sqlite:///./quiz11.db'
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./quiz12.db'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False}
@@ -23,5 +23,4 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
