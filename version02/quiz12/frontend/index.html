@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang='ko'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>질문 등록</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>질문 등록</h1>
+    <form id='questionForm'>
+        <div class='form-group'>
+            <label for='subject'>제목</label>
+            <input type='text' id='subject' required>
+        </div>
+        <div class='form-group'>
+            <label for='content'>내용</label>
+            <textarea id='content' required></textarea>
+        </div>
+        <button type='submit'>등록</button>
+    </form>
+    <div id='message' class='message'></div>
+
+    <script>
+        document.getElementById('questionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const subject = document.getElementById('subject').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const messageDiv = document.getElementById('message');
+
+            if (!subject || !content) {
+                messageDiv.textContent = '제목과 내용을 입력해주세요.';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/api/question/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({subject, content}),
+                });
+
+                if (response.ok) {
+                    messageDiv.textContent = '질문이 등록되었습니다.';
+                    messageDiv.className = 'message success';
+                    e.target.reset();
+                } else {
+                    const error = await response.json();
+                    messageDiv.textContent = `오류: ${error.detail || '등록 실패'}`;
+                    messageDiv.className = 'message error';
+                }
+            } catch (error) {
+                messageDiv.textContent = `오류: ${error.message}`;
+                messageDiv.className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>
+

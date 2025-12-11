@@ -16,4 +16,3 @@ class Question(Base):
     content = Column(String, nullable=False)
     create_date = Column(DateTime, default=datetime.utcnow)
 
-
